@@ -11,7 +11,7 @@ export default async function Scripts() {
   const data: IScriptResponse[] = await scriptsService
     .fetchAllScripts(accessToken)
     .then((data) => {
-      return data[0].map((item) => ({
+      return data[0].map((item: IScriptResponse) => ({
         id: item.id,
         email: item.email,
         title: item.title,
@@ -19,7 +19,7 @@ export default async function Scripts() {
         author: item.author,
         votes: item.votes,
         status: item.status,
-        createdAt: dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss"),
+        createdAt: dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss"),
       }));
     })
     .catch((error) => {
