@@ -1,26 +1,34 @@
+import { ISigninForm } from "@/interfaces";
 import { cooperfilmeApi } from "../api.service";
-import Cookies from "js-cookie";
 
 export const authService = {
-  async login(email: string, password: string) {
+  async login({ email, password }: ISigninForm) {
     try {
       const response = await cooperfilmeApi("/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username: email, password }),
       });
 
-      const data = await response.json();
-      if (response.ok && data.token) {
-        Cookies.set("authToken", data.token); // Save token in cookies
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Failed to send script: ${errorData.message || response.statusText}`
+        );
       }
 
-      return data;
+      console.log(`${email} is signed in`);
+      return response.json();
     } catch (error) {
-      console.error("Login error:", error);
-      throw new Error("Failed to login. Please try again later.");
+      if (error instanceof Error) {
+        console.error("Login error:", error);
+        throw new Error(`Login error: ${error.message}`);
+      } else {
+        console.error("Login error:", error);
+        throw new Error("Login error");
+      }
     }
   },
 };

@@ -4,9 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Film, Menu } from "lucide-react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookies.remove("access_token");
+    router.replace("/backoffice/signin");
+  };
 
   return (
     <header className="bg-light-background shadow-md">
@@ -27,12 +35,13 @@ export default function Header() {
             >
               Roteiros
             </Link>
-            <Link
-              href="/backoffice/signin"
+            <Button
+              variant="ghost"
+              onClick={handleLogout}
               className="text-muted-foreground hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
             >
               Sair
-            </Link>
+            </Button>
           </nav>
           <div className="md:hidden">
             <Button

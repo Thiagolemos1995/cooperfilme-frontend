@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { startTransition } from "react";
+import { loginAction } from "@/actions";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 const schema = z.object({
@@ -24,8 +27,19 @@ export default function SigninPage() {
   const router = useRouter();
 
   const onSubmit = (data: z.infer<typeof schema>) => {
-    console.log(data);
-    router.push("/backoffice/scripts");
+    startTransition(() => {
+      loginAction(data)
+        .then((data) => {
+          Cookies.set("access_token", data.access_token, {
+            sameSite: "strict",
+            expires: 1,
+            secure: true,
+          });
+
+          router.replace("/backoffice/scripts");
+        })
+        .catch((error) => console.error(error.message));
+    });
   };
 
   return (
@@ -35,14 +49,12 @@ export default function SigninPage() {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#1a1a1a", // Fundo preto mais claro
+        backgroundColor: "#1a1a1a",
       }}
     >
       <Card style={{ width: "400px" }}>
         <CardHeader>
-          <CardTitle>
-            <h1 className="text-2xl font-bold">Sign in</h1>
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
         </CardHeader>
         <CardContent>
           <form
