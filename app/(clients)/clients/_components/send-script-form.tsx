@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { scriptsService } from "../../services";
+import { scriptsService } from "../../../../services";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,7 +32,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { ISendScript } from "../../interfaces";
+import { ISendScript } from "../../../../interfaces";
 
 const sendScriptSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
