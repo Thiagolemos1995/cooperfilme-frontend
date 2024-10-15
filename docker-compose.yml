@@ -1,0 +1,15 @@
+services:
+  cooperfilme_frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cooperfilme_frontend
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env
+    networks:
+      - cooperfilme_network
+
+networks:
+  cooperfilme_network:
